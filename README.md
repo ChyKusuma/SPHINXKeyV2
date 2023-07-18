@@ -8,6 +8,8 @@ This repository contains code for the SPHINXKey project, which is a `Merged Hybr
 
 ## Components
 
+This code is alternative forThis code is alternative for [SPHINXHybridKey](https://github.com/SPHINX-HUB-ORG/SPHINXKey) as further consideration. as further consideration.
+
 ### SPHINXKey Namespace
 
 The `SPHINXKey` namespace provides functions for generating key pairs, calculating addresses, and printing key information. It relies on functionality from other included headers such as `Hybrid_key.hpp` and `Hash.hpp`.
