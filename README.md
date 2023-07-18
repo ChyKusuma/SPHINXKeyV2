@@ -8,7 +8,7 @@ This repository contains code for the SPHINXKey project, which is a `Merged Hybr
 
 ## Components
 
-This code is alternative forThis code is alternative for [SPHINXHKey](https://github.com/SPHINX-HUB-ORG/SPHINXKey) as further consideration. as further consideration.
+This code is alternative for [SPHINXHKey](https://github.com/SPHINX-HUB-ORG/SPHINXKey) as further consideration.
 
 ### SPHINXKey Namespace
 
