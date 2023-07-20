@@ -12,80 +12,27 @@
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-// The provided code belongs to the SPHINXKey namespace and contains functions related to generating hybrid keypairs, performing key exchanges, generating addresses, calculating public keys, and printing key pair information. Let's go through each part of the code to understand its functionality:
+// This code is a part of the SPHINXKey namespace, which provides functions related to the SPHINX (Sphinx-Hybrid Key) cryptographic scheme. The main functionalities include generating SPHINX key pairs, extracting SPHINX public and private keys from a hybrid key pair, calculating the SPHINX public key from the private key, and generating a smart contract address based on the SPHINX public key and a contract name. Let's break down the code and explain each part in detail:
 
-// generate_hybrid_keypair:
-    // This function generates a hybrid keypair.
-    // It creates an instance of HybridKeypair struct and initializes it.
-    // It generates the Kyber1024 key pair by calling the generate_kyber1024_key_pair function and assigns it to merged_key.kyber_private_key.
-    // It generates the Kyber1024 public key from the private key by calling the kyber1024_kem::keygen function and assigns it to merged_key.kyber_public_key.
-    // It generates the Curve448 key pair by calling the generate_curve448_key_pair function and assigns it to curve448_key.
-    // It returns the generated hybrid keypair.
+// Type Aliases and Constants:
+    // The code defines two type aliases SPHINXPubKey and SPHINXPrivKey to represent SPHINX public and private keys, respectively. Additionally, it defines a constant SPHINX_PUBLIC_KEY_LENGTH which is the size of the SPHINX public key, calculated as the sum of the Kyber1024 public key size and the X448 public key size.
 
-// generate_curve448_key_pair:
-    // This function generates a Curve448 key pair.
-    // It creates a pair of vectors (curve448_key) to hold the key pair.
-    // It calls the curve448_generate_keypair function to generate the Curve448 key pair and stores the result in curve448_key.
-    // It returns the generated Curve448 key pair.
+// calculatePublicKey Function:
+    // This function takes the SPHINX private key as input and calculates the corresponding SPHINX public key. It creates a vector of bytes to store the public key, then calls a hypothetical function calculate_sphinx_public_key, which is assumed to be available externally to calculate the public key. The function returns the computed public key as a vector.
 
-// generate_kyber1024_key_pair:
-    // This function generates a Kyber1024 key pair.
-    // It creates a kyber1024_kem::PrivateKey object (private_key).
-    // It calls the kyber1024_kem::keygen function to generate the Kyber1024 private key and assigns it to private_key.
-    // It returns the generated Kyber1024 private key.
+// extractSPHINXPublicKey and extractSPHINXPrivateKey Functions:
+    // These functions are used to extract the SPHINX public and private keys, respectively, from a hybrid key pair (HybridKeypair struct). They simply return the corresponding components from the merged_key member of the HybridKeypair structure.
 
-// merge_key_pair:
-    // This function merges the Curve448 and Kyber1024 key pairs into a single hybrid keypair.
-    // It takes the Curve448 key pair (curve448_key) and Kyber1024 private key (kyber_key) as input.
-    // It creates an instance of HybridKeypair struct (hybrid_keypair).
-    // It assigns the Curve448 key pair to hybrid_keypair.curve448_key.
-    // It assigns the Kyber1024 private key to hybrid_keypair.merged_key.kyber_private_key.
-    // It generates the Kyber1024 public key from the Kyber1024 private key by calling the kyber1024_kem::keygen function and assigns it to hybrid_keypair.merged_key.kyber_public_key.
-    // It returns the merged hybrid keypair.
+// generateAddress Function:
+    // This function generates a smart contract address based on the SPHINX public key and a contract name. It uses the SPHINXHash::SPHINX_256 function (assumed to be available) to hash the SPHINX public key. The function then concatenates the contract name and the hashed public key to create a contract identifier. Finally, the function returns the contract identifier as the smart contract address.
 
-// performCurve448KeyExchange:
-    // This function performs the Curve448 key exchange between a private key and a public key.
-    // It takes the shared key array (shared_key), private key array (private_key), and public key array (public_key) as input.
-    // It calls the curve448_keypair function to generate the shared key using the private key.
-    // It then calls the curve448_scalarmult function to perform the scalar multiplication between the shared key and the public key, storing the result in the shared key array (shared_key).
+// printKeyPair Lambda Function:
+    // This lambda function is defined inside the generateAddress function. It takes a hybrid key pair as input and prints the merged public key and the smart contract address generated from that public key using the generateAddress function.
 
-// performHybridKeyExchange:
-    // This function performs the hybrid key exchange combining Curve448 and Kyber1024.
-    // It takes the shared key array (shared_key), Curve448 key pair (curve448_key), and Kyber1024 private key (kyber_key) as input.
-    // It performs the Curve448 key exchange by calling the performCurve448KeyExchange function, passing the shared key array, Curve448 private key from curve448_key, and Kyber1024 private key (kyber_key.data()).
-    // It performs the Kyber1024 KEM encapsulation by generating the Kyber1024 public key from the Kyber1024 private key using kyber1024_kem::keygen function, and calling the kyber1024_kem::encapsulate function, passing the shared key array, Curve448 public key from curve448_key, and Kyber1024 public key.
-    // The resulting shared key is stored in the shared key array (shared_key).
+// generate_hybrid_keypair Function:
+    // This function calls the SPHINXHybridKey::generate_hybrid_keypair function from the SPHINXHybridKey namespace (assumed to be available externally). It generates a hybrid key pair using the Kyber1024, X448, and PKE schemes. Then, it returns the generated hybrid key pair.
 
-// generate_and_perform_key_exchange:
-    // This function generates a hybrid keypair and performs the key exchange.
-    // It calls the generate_hybrid_keypair function to generate a hybrid keypair.
-    // It then calls the performHybridKeyExchange function, passing the shared key array from the hybrid keypair, Curve448 key pair from the hybrid keypair, and Kyber1024 private key from the hybrid keypair.
-    // Finally, it returns the generated hybrid keypair.
-
-// generateAddress:
-    // This function generates a smart contract address based on the public key and contract name.
-    // It takes the public key and contract name as input.
-    // It calculates the SPHINX-256 hash of the public key by calling the SPHINXHash::SPHINX_256 function.
-    // It generates a unique identifier for the smart contract based on the contract name and public key hash.
-    // It uses the contract identifier as the smart contract address and returns it.
-
-// calculatePublicKey:
-    // This function calculates the public key from the private key.
-    // It takes the private key as input.
-    // It converts the private key to bytes.
-    // It generates the hybrid keypair by calling the generate_curve448_key_pair, generate_kyber1024_key_pair, and kyber1024_kem::keygen functions.
-    // It merges the Curve448 and Kyber1024 key pairs into the hybrid keypair.
-    // It gets the Curve448 public key from the hybrid keypair and calculates the SPHINX-256 hash of the Curve448 public key.
-    // It returns the calculated public key.
-
-// printKeyPair:
-    // This function prints the key pair information.
-    // It takes a hybrid keypair from the SPHINXHybridKey namespace as input.
-    // It extracts the Kyber1024 public key from the merged key pair and prints it.
-    // It generates the address using the extracted public key and the contract name "MyContract" by calling the generateAddress function.
-    // It extracts the Kyber1024 public key and the Curve448 public key from the merged key pair and prints the merged public key (Kyber1024-Curve448).
-
-// This code provides functions for generating and manipulating hybrid keypairs, performing key exchanges, generating addresses, calculating public keys, and printing key pair information.
+// The SPHINXKey namespace provides a set of utility functions to work with the SPHINX cryptographic scheme and interacts with other functions available in the SPHINXHybridKey namespace to generate a hybrid key pair and perform key exchange and encryption operations using the Kyber1024, X448, and PKE schemes.
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -97,144 +44,74 @@
 
 #include "Hybrid_key.hpp"
 #include "Hash.hpp"
+#include "Key.hpp"
 
 
 namespace SPHINXKey {
 
-    // Function to generate the hybrid keypair
-    HybridKeypair generate_hybrid_keypair() {
-        HybridKeypair hybrid_keypair;
+    // Define an alias for the merged public key as SPHINXPubKey
+    using SPHINXPubKey = std::vector<unsigned char>;
 
-        // Generate the Kyber1024 key pair
-        hybrid_keypair.merged_key.kyber_private_key = generate_kyber1024_key_pair();
+    // Define an alias for the merged private key as SPHINXPrivKey
+    using SPHINXPrivKey = std::vector<unsigned char>;
 
-        // Generate the Kyber1024 public key from the private key
-        hybrid_keypair.merged_key.kyber_public_key = kyber1024_kem::keygen(hybrid_keypair.merged_key.kyber_private_key);
+    // Define value of SPHINXPubKey length
+    constexpr size_t SPHINX_PUBLIC_KEY_LENGTH = KYBER1024_PUBLIC_KEY_LENGTH + CURVE448_PUBLIC_KEY_SIZE;
 
-        // Generate the Curve448 key pair
-        hybrid_keypair.curve448_key = generate_curve448_key_pair();
-
-        return hybrid_keypair;
+    // Function to calculate the SPHINX public key from the private key
+    SPHINXPubKey calculatePublicKey(const SPHINXPrivKey& privateKey) {
+        SPHINXPubKey publicKey(SPHINX_PUBLIC_KEY_LENGTH);
+        // Assuming the appropriate function for calculating SPHINX public key is available
+        calculate_sphinx_public_key(publicKey.data(), privateKey.data());
+        return publicKey;
     }
 
-    // Function to generate the Curve448 key pair
-    std::pair<std::vector<unsigned char>, std::vector<unsigned char>> generate_curve448_key_pair() {
-        std::pair<std::vector<unsigned char>, std::vector<unsigned char>> curve448_key;
-
-        // Generate the Curve448 key pair using curve448_generate_keypair function
-        curve448_generate_keypair(curve448_key.first.data(), curve448_key.second.data());
-        
-        return curve448_key;
+    // Function to extract the SPHINX public key from the hybrid keypair
+    SPHINXPubKey extractSPHINXPublicKey(const HybridKeypair& hybridKeyPair) {
+        return hybridKeyPair.merged_key.kyber_public_key;
     }
 
-    // Function to generate the Kyber1024 key pair
-    kyber1024_kem::PrivateKey generate_kyber1024_key_pair() {
-        kyber1024_kem::PrivateKey private_key;
-
-        // Generate the Kyber1024 private key using keygen function
-        kyber1024_kem::keygen(private_key);
-        
-        return private_key;
-    }
-
-    // Function to merge the Curve448 and Kyber1024 key pairs
-    HybridKeypair merge_key_pair(const std::pair<std::vector<unsigned char>, std::vector<unsigned char>>& curve448_key,
-                                const kyber1024_kem::PrivateKey& kyber_key) {
-        HybridKeypair hybrid_keypair;
-
-        // Assign the Curve448 key pair to hybrid_keypair
-        hybrid_keypair.curve448_key = curve448_key;
-
-        // Assign the Kyber1024 private key to hybrid_keypair
-        hybrid_keypair.merged_key.kyber_private_key = kyber_key;
-
-        // Generate the Kyber1024 public key from the Kyber1024 private key
-        hybrid_keypair.merged_key.kyber_public_key = kyber1024_kem::keygen(hybrid_keypair.merged_key.kyber_private_key);
-
-        return hybrid_keypair;
-    }
-
-    // Function to perform the Curve448 key exchange
-    void performCurve448KeyExchange(unsigned char shared_key[56], const unsigned char private_key[56], const unsigned char public_key[56]) {
-        curve448_keypair(shared_key, private_key);
-        curve448_scalarmult(shared_key, shared_key, public_key);
-    }
-
-    // Function to perform the hybrid key exchange combining Curve448 and Kyber1024
-    void performHybridKeyExchange(unsigned char shared_key[32], const std::pair<std::vector<unsigned char>, std::vector<unsigned char>>& curve448_key,
-                                 const kyber1024_kem::PrivateKey& kyber_key) {
-        // Perform the Curve448 key exchange
-        unsigned char curve448_shared_key[56];
-        performCurve448KeyExchange(curve448_shared_key, curve448_key.first.data(), kyber_key.data());
-
-        // Perform the Kyber1024 KEM encapsulation using kyber1024_kem::encapsulate function
-        kyber1024_kem::PublicKey kyber_public_key = kyber1024_kem::keygen(kyber_key);
-        kyber1024_kem::encapsulate(shared_key, curve448_key.second.data(), kyber_public_key.data());
-    }
-
-    // Function to generate the hybrid keypair and perform the key exchange
-    HybridKeypair generate_and_perform_key_exchange() {
-        HybridKeypair hybrid_keypair = generate_hybrid_keypair();
-
-        // Perform the hybrid key exchange using the generated key pair
-        performHybridKeyExchange(hybrid_keypair.merged_key.shared_key.data(), hybrid_keypair.curve448_key, hybrid_keypair.merged_key.kyber_private_key);
-
-        return hybrid_keypair;
+    // Function to extract the SPHINX private key from the hybrid keypair
+    SPHINXPrivKey extractSPHINXPrivateKey(const HybridKeypair& hybridKeyPair) {
+        return hybridKeyPair.merged_key.kyber_private_key;
     }
 
     // Function to generate the smart contract address based on the public key and contract name
     std::string generateAddress(const std::string& publicKey, const std::string& contractName) {
-        // Calculate the SPHINX-256 hash of the public key using SPHINXHash::SPHINX_256 function
+        // Assume the definition of SPHINXHash::SPHINX_256 function
         std::string hash = SPHINXHash::SPHINX_256(publicKey);
 
-        // Generate a unique identifier for the smart contract based on the contract name and public key hash
         std::string contractIdentifier = contractName + "_" + hash;
-
-        // Use the contract identifier as the smart contract address
         std::string address = contractIdentifier;
+
+        // Function to print the key pair information
+        auto printKeyPair = [](const HybridKeypair& hybridKeyPair) {
+            // Extract the public key from the merged key pair
+            SPHINXPubKey pubKey = hybridKeyPair.merged_key.kyber_public_key;
+            std::string mergedPublicKey(reinterpret_cast<const char*>(pubKey.data()), pubKey.size());
+
+            // Print the merged public key and address
+            std::cout << "Merged Public key: " << mergedPublicKey << std::endl;
+            std::cout << "Address: " << generateAddress(mergedPublicKey, "MyContract") << std::endl;
+        };
+
+        // Call the original function from "hybrid_key.cpp"
+        HybridKeypair hybrid_keypair = SPHINXHybridKey::generate_hybrid_keypair();
+
+        // Call the printKeyPair function to print the merged public key and address
+        printKeyPair(hybrid_keypair);
 
         return address;
     }
 
-    // Function to calculate the public key from the private key
-    std::string calculatePublicKey(const std::string& privateKey) {
-        // Convert the private key to bytes
-        std::vector<unsigned char> privateKeyBytes(privateKey.begin(), privateKey.end());
+    // Function to generate the hybrid keypair using functions from "hybrid_key.cpp"
+    HybridKeypair generate_hybrid_keypair() {
+        // Forward declaration of HybridKeypair struct (if required)
+        struct HybridKeypair;
 
-        // Generate the hybrid key pair
-        HybridKeypair hybridKeyPair;
-        hybridKeyPair.curve448_key = generate_curve448_key_pair();
-        hybridKeyPair.merged_key.kyber_private_key = generate_kyber1024_key_pair();
-        hybridKeyPair.merged_key.kyber_public_key = kyber1024_kem::keygen(hybridKeyPair.merged_key.kyber_private_key);
+        // Call the original function from "hybrid_key.cpp"
+        HybridKeypair hybrid_keypair = SPHINXHybridKey::generate_hybrid_keypair();
 
-        // Merge the Curve448 and Kyber1024 key pairs
-        hybridKeyPair.merged_key = merge_key_pair(hybridKeyPair.curve448_key, hybridKeyPair.merged_key.kyber_private_key);
-
-        // Get the Curve448 public key from the hybrid key pair
-        std::string curve448PublicKey(reinterpret_cast<const char*>(hybridKeyPair.curve448_key.first.data()), 56);
-
-        // Calculate the SPHINX-256 hash of the Curve448 public key
-        std::string calculatedPublicKey = SPHINXHash::SPHINX_256(curve448PublicKey);
-
-        return calculatedPublicKey;
-    }
-
-    // Function to print the key pair information
-    void printKeyPair(const SPHINXHybridKey::HybridKeypair& hybridKeyPair) {
-        // Extract the public key from the merged key pair
-        std::string mergedPublicKey(reinterpret_cast<const char*>(hybridKeyPair.merged_key.kyber_public_key.data()), kyber1024_kem::public_key_length);
-
-        // Print the merged public key and address
-        std::cout << "Merged Public key: " << mergedPublicKey << std::endl;
-        std::cout << "Address: " << SPHINXHybridKey::generateAddress(mergedPublicKey, "MyContract") << std::endl;
-
-        // Extract the Kyber1024 public key from the merged key pair
-        std::string kyberPublicKey(reinterpret_cast<const char*>(hybridKeyPair.merged_key.kyber_public_key.k.data()), kyber1024_kem::public_key_length);
-
-        // Extract the Curve448 public key from the merged key pair
-        std::string curve448PublicKey(reinterpret_cast<const char*>(hybridKeyPair.curve448_key.first.data()), 56);
-
-        // Print the merged public key (Kyber1024-Curve448)
-        std::cout << "Merged Public key (Kyber1024-Curve448): " << kyberPublicKey + curve448PublicKey << std::endl;
+        return hybrid_keypair;
     }
 } // namespace SPHINXKey
