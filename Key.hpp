@@ -14,50 +14,44 @@
 #ifndef SPHINX_KEY_HPP
 #define SPHINX_KEY_HPP
 
+#pragma once
+
 #include <string>
 #include <vector>
 #include <cstring>
 #include <utility>
 #include <iostream>
 
-#include "Hybrid_key.hpp"
-#include "Hash.hpp"
+#include <vector>
+#include <string>
 
 
 namespace SPHINXKey {
 
-    // Function to generate the hybrid keypair
-    HybridKeypair generate_hybrid_keypair();
+    // Define an alias for the merged public key as SPHINXPubKey
+    using SPHINXPubKey = std::vector<unsigned char>;
 
-    // Function to generate the Curve448 key pair
-    std::pair<std::vector<unsigned char>, std::vector<unsigned char>> generate_curve448_key_pair();
+    // Define an alias for the merged private key as SPHINXPrivKey
+    using SPHINXPrivKey = std::vector<unsigned char>;
 
-    // Function to generate the Kyber1024 key pair
-    kyber1024_kem::PrivateKey generate_kyber1024_key_pair();
+    // Define value of SPHINXPubKey length
+    constexpr size_t SPHINX_PUBLIC_KEY_LENGTH = KYBER1024_PUBLIC_KEY_LENGTH + CURVE448_PUBLIC_KEY_SIZE;
 
-    // Function to merge the Curve448 and Kyber1024 key pairs
-    HybridKeypair merge_key_pair(const std::pair<std::vector<unsigned char>, std::vector<unsigned char>>& curve448_key,
-                                const kyber1024_kem::PrivateKey& kyber_key);
+    // Function to calculate the SPHINX public key from the private key
+    SPHINXPubKey calculatePublicKey(const SPHINXPrivKey& privateKey);
 
-    // Function to perform the Curve448 key exchange
-    void performCurve448KeyExchange(unsigned char shared_key[56], const unsigned char private_key[56], const unsigned char public_key[56]);
+    // Function to extract the SPHINX public key from the hybrid keypair
+    SPHINXPubKey extractSPHINXPublicKey(const HybridKeypair& hybridKeyPair);
 
-    // Function to perform the hybrid key exchange combining Curve448 and Kyber1024
-    void performHybridKeyExchange(unsigned char shared_key[32], const std::pair<std::vector<unsigned char>, std::vector<unsigned char>>& curve448_key,
-                                 const kyber1024_kem::PrivateKey& kyber_key);
-
-    // Function to generate the hybrid keypair and perform the key exchange
-    HybridKeypair generate_and_perform_key_exchange();
+    // Function to extract the SPHINX private key from the hybrid keypair
+    SPHINXPrivKey extractSPHINXPrivateKey(const HybridKeypair& hybridKeyPair);
 
     // Function to generate the smart contract address based on the public key and contract name
     std::string generateAddress(const std::string& publicKey, const std::string& contractName);
 
-    // Function to calculate the public key from the private key
-    std::string calculatePublicKey(const std::string& privateKey);
-
-    // Function to print the key pair information
-    void printKeyPair(const SPHINXHybridKey::HybridKeypair& hybridKeyPair);
+    // Function to generate the hybrid keypair using functions from "hybrid_key.cpp"
+    HybridKeypair generate_hybrid_keypair();
 
 } // namespace SPHINXKey
 
-#endif // SPHINX_KEY_HPP
+#endif // SPHINXKEY_HPP
