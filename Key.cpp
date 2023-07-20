@@ -121,11 +121,11 @@ namespace SPHINXKey {
     // Function to generate and perform a key exchange
     SPHINXHybridKey::HybridKeypair generate_and_perform_key_exchange() {
         // Generate the hybrid keypair
-        SPHINXHybridKey::HybridKeypair hybrid_keypair = generate_hybrid_keypair();
+        SPHINXHybridKey::HybridKeypair hybridKeyPair = generate_hybrid_keypair();
 
         // Perform the key exchange using Kyber1024 KEM
         std::vector<uint8_t> encapsulated_key;
-        std::string shared_secret = encapsulateHybridSharedSecret(hybrid_keypair, encapsulated_key);
+        std::string shared_secret = encapsulateHybridSharedSecret(hybridKeyPair, encapsulated_key);
 
         // Return the hybrid keypair containing the exchanged keys
         return SPHINXHybridKey::HybridKeypair;
@@ -164,10 +164,10 @@ namespace SPHINXKey {
         };
 
         // Call the original function from "hybrid_key.cpp"
-        SPHINXHybridKey::HybridKeypair hybrid_keypair = SPHINXHybridKey::generate_hybrid_keypair();
+        SPHINXHybridKey::HybridKeypair hybridKeyPair = SPHINXHybridKey::generate_hybrid_keypair();
 
         // Call the printKeyPair function to print the merged public key and address
-        printKeyPair(hybrid_keypair, contractIdentifier);
+        printKeyPair(hybridKeyPair, contractIdentifier);
 
         return contractIdentifier;
     }
