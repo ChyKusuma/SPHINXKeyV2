@@ -21,12 +21,28 @@
 #include <cstring>
 #include <utility>
 #include <iostream>
+#include <algorithm>
+#include <cstdint>
 
-#include <vector>
-#include <string>
+namespace SPHINXHybridKey {
+    // Assume the definition of SPHINXHybridKey
+    struct HybridKeypair {};
+}
 
+namespace SPHINXHash {
+    // Assume the definition of SPHINX_256 function
+    std::string SPHINX_256(const std::vector<unsigned char>& data);
+}
 
 namespace SPHINXKey {
+    // Constants
+    constexpr size_t CURVE448_PRIVATE_KEY_SIZE = 56;
+    constexpr size_t CURVE448_PUBLIC_KEY_SIZE = 56;
+    constexpr size_t KYBER1024_PUBLIC_KEY_LENGTH = 800;
+
+    // Size of HYBRIDKEY
+    constexpr size_t HYBRID_KEYPAIR_LENGTH = CURVE448_PUBLIC_KEY_SIZE + KYBER1024_PUBLIC_KEY_LENGTH + 2 * 64 (HMAC_MAX_MD_SIZE) = 976;
+    // Assuming HMAC_MAX_MD_SIZE is defined elsewhere
 
     // Define an alias for the merged public key as SPHINXPubKey
     using SPHINXPubKey = std::vector<unsigned char>;
@@ -34,24 +50,23 @@ namespace SPHINXKey {
     // Define an alias for the merged private key as SPHINXPrivKey
     using SPHINXPrivKey = std::vector<unsigned char>;
 
-    // Define value of SPHINXPubKey length
-    constexpr size_t SPHINX_PUBLIC_KEY_LENGTH = KYBER1024_PUBLIC_KEY_LENGTH + CURVE448_PUBLIC_KEY_SIZE;
-
     // Function to calculate the SPHINX public key from the private key
-    SPHINXPubKey calculatePublicKey(const SPHINXPrivKey& privateKey);
+    SPHINXKey::SPHINXPubKey calculatePublicKey(const SPHINXKey::SPHINXPrivKey& privateKey);
 
-    // Function to extract the SPHINX public key from the hybrid keypair
-    SPHINXPubKey extractSPHINXPublicKey(const HybridKeypair& hybridKeyPair);
-
-    // Function to extract the SPHINX private key from the hybrid keypair
-    SPHINXPrivKey extractSPHINXPrivateKey(const HybridKeypair& hybridKeyPair);
+    // Function to convert SPHINXKey to string
+    std::string sphinxKeyToString(const SPHINXKey::SPHINXKey& key);
 
     // Function to generate the smart contract address based on the public key and contract name
-    std::string generateAddress(const std::string& publicKey, const std::string& contractName);
+    std::string generateAddress(const SPHINXKey::SPHINXPubKey& publicKey, const std::string& contractName);
 
-    // Function to generate the hybrid keypair using functions from "hybrid_key.cpp"
-    HybridKeypair generate_hybrid_keypair();
+    // Function to generate the hybrid key pair from "hybrid_key.cpp"
+    SPHINXHybridKey::HybridKeypair generate_hybrid_keypair();
 
-} // namespace SPHINXKey
+    // Function to generate and perform key exchange hybrid method from "hybrid_key.cpp"
+    SPHINXHybridKey::HybridKeypair generate_and_perform_key_exchange();
 
-#endif // SPHINXKEY_HPP
+    // Function to print the generated keys and return them as strings
+    std::pair<std::string, std::string> printKeyPair(const std::string& name, const SPHINXKey::SPHINXPrivKey& privateKey, const SPHINXKey::SPHINXPubKey& publicKey);
+}
+
+#endif // SPHINX_KEY_HPP
