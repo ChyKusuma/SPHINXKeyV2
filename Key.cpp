@@ -12,43 +12,55 @@
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-// TThe provided code defines various functions related to generating and working with hybrid key pairs using cryptographic algorithms like Curve448, Kyber1024, and SPHINXhash hash functions.
+// The provided code defines various functions related to generating and working with hybrid key pairs using cryptographic algorithms like Curve448, Kyber1024, and SPHINXhash hash functions.
 
-// Constants and Type Aliases:
-    // The code defines various constants related to key sizes (CURVE448_PRIVATE_KEY_SIZE, CURVE448_PUBLIC_KEY_SIZE, KYBER1024_PUBLIC_KEY_LENGTH) and HYBRID_KEYPAIR_LENGTH, which represents the size of the hybrid key pair as the sum of sizes of Curve448 public key, Kyber1024 public key, and twice the HMAC maximum message digest size (HMAC_MAX_MD_SIZE).
-    // The code also defines two type aliases: SPHINXPubKey and SPHINXPrivKey, which represent the public and private keys in the SPHINXKey namespace.
+// Namespaces SPHINXHybridKey and SPHINXHash:
+    // The code starts with defining two namespaces: SPHINXHybridKey and SPHINXHash.
+    // SPHINXHybridKey does not contain any actual functions or data; it only has a dummy struct HybridKeypair, which is currently empty.
+    // SPHINXHash contains two functions: SPHINX_256 and RIPEMD_160. These functions are currently implemented as dummy functions for demonstration purposes.
 
-// calculatePublicKey(const SPHINXKey::SPHINXPrivKey& privateKey):
-    // This function takes a private key (privateKey) and calculates the corresponding SPHINX public key by extracting the Kyber1024 public key from the merged private key.
+// Base58 Encoding:
+    // The code defines a static string base58_chars which contains the characters used in Base58 encoding.
+    // The function EncodeBase58 takes a vector of unsigned characters as input and encodes it into a Base58 string.
+    // The function calculates the number of leading zeros in the input data, converts the data to a big-endian number, and then performs Base58 encoding.
 
-// sphinxKeyToString(const SPHINXKey::SPHINXKey& key):
-    // This function converts a SPHINXKey to a string by concatenating its bytes.
+// SPHINXKey Namespace:
+    // This namespace contains several functions related to the generation and manipulation of cryptographic keys.
+    // Constants CURVE448_PRIVATE_KEY_SIZE, CURVE448_PUBLIC_KEY_SIZE, and KYBER1024_PUBLIC_KEY_LENGTH define the sizes of keys for Curve448 and Kyber1024 algorithms.
+    // HYBRID_KEYPAIR_LENGTH is the total length of the hybrid key pair, which combines the public keys of both algorithms with extra HMAC sizes.
 
-// generateAddress(const SPHINXKey::SPHINXPubKey& publicKey, const std::string& contractName):
-    // This function generates a smart contract address based on a given public key and a contract name.
-    // It converts the public key to a string, hashes it using the SPHINX_256 hash function (not fully implemented), and then concatenates the contract name with the hash to form the contract identifier.
+// calculatePublicKey Function:
+    // This function calculates the SPHINX public key from the private key by extracting the Kyber1024 public key from the merged private key.
 
-// generate_hybrid_keypair():
-    // This function generates a hybrid key pair by combining keys from Curve448 and Kyber1024 algorithms.
-    // It generates private and public keys for both algorithms and then merges them using the mergePrivateKeys and mergePublicKeys lambda functions.
-    // The resulting hybrid key pair is returned as a structure of type SPHINXHybridKey::HybridKeypair.
+// sphinxKeyToString Function:
+    // This function converts the binary representation of SPHINX key (private or public) to a string.
 
-// generate_and_perform_key_exchange():
-    // This function generates and performs key exchange using the hybrid key pair.
-    // It generates private and public keys for Curve448 and Kyber1024 algorithms.
-    // The private keys are merged using the mergePrivateKeys lambda function, and the public keys are merged using the mergePublicKeys lambda function.
-    // It then performs key exchange using X448 and Kyber1024 KEM (Key Encapsulation Mechanism).
-    // After exchanging the keys, it encrypts and decrypts a sample message using Kyber1024 PKE (Public Key Encryption).
-    // The original message, encrypted message, and decrypted message are printed.
-    // Finally, the shared secret is returned as specified in the function signature.
+// generateAddress Function:
+    // This function generates a smart contract address based on the public key and contract name.
+    // It first converts the public key to a string, then performs SPHINX_256 and RIPEMD-160 hashes on the public key string.
+    // It adds a version byte (0x00) to the RIPEMD-160 hash and calculates the checksum using double SPHINX_256 hash.
+    // Finally, it performs Base58Check encoding to create the contract address.
 
-// printKeyPair(const std::string& name, const SPHINXKey::SPHINXPrivKey& privateKey, const SPHINXKey::SPHINXPubKey& publicKey):
-    // This function takes a name (for identification), a private key, and a public key as inputs.
+// mergePrivateKeys and mergePublicKeys Functions:
+    // These functions are used to merge the private keys and public keys of Curve448 and Kyber1024.
+
+// generate_hybrid_keypair Function:
+    // This function generates the hybrid key pair by combining the keys generated from Curve448 and Kyber1024 algorithms.
+    // It uses the private and public key generation functions from an external source hybrid_key.cpp, which are not defined in the provided code snippet.
+    // The merged private and public keys are obtained by concatenating the corresponding keys from the two algorithms and then hashing the merged private key using SPHINX_256.
+    // The result is stored in a struct HybridKeypair from the SPHINXHybridKey namespace.
+
+// generate_and_perform_key_exchange Function:
+    // This function generates and performs a key exchange using the hybrid key pair.
+    // It follows similar steps as the generate_hybrid_keypair function to generate the hybrid key pair.
+    // It then performs a key exchange using the X448 and Kyber1024 key encapsulation mechanisms (KEM).
+    // It also encrypts and decrypts a sample message using Kyber1024 public key encryption (PKE) to demonstrate the use of the keys.
+
+// printKeyPair Function:
+    // This function takes a name (identifier), private key, and public key as input.
     // It converts the private and public keys to strings and prints them.
-    // It generates a contract address using the public key and a contract name.
-    // The private key, public key, and contract address are returned as strings in a pair.
-
-// Note: Some functions such as SPHINX_256, generateCurve448PrivateKey, generateCurve448PublicKey, generateKyberPrivateKey, generateKyberPublicKey, encapsulateHybridSharedSecret, and decapsulateHybridSharedSecret are to be defined in "Hash.hpp" and "Hybrid_Key.hpp". Their functionality is crucial for the correct operation of the generate_and_perform_key_exchange() function.
+    // It then generates a contract address based on the public key and a contract name and prints it.
+    // Finally, it returns the private key and public key as strings.
 
 // The SPHINXKey namespace provides a set of utility functions to work with the SPHINX cryptographic scheme and interacts with other functions available in the SPHINXHybridKey namespace to generate a hybrid key pair and perform key exchange and encryption operations using the Kyber1024, X448, and PKE schemes.
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -65,7 +77,9 @@
 #include "Hybrid_key.hpp"
 #include "Hash.hpp"
 #include "Key.hpp"
-#include "Consensus/Contract.hpp"
+#include "base58check.h"
+#include "base58.h"
+#include "hash/Ripmed160.hpp"
 
 
 namespace SPHINXHybridKey {
@@ -79,6 +93,46 @@ namespace SPHINXHash {
         // Dummy implementation for demonstration purposes
         return "hashed_" + std::string(data.begin(), data.end());
     }
+
+    // Assume the definition of RIPEMD-160 function
+    std::string RIPEMD_160(const std::vector<unsigned char>& data) {
+        // Dummy implementation for demonstration purposes
+        return "ripemd160_" + std::string(data.begin(), data.end());
+    }
+}
+
+// Base58 characters (excluding confusing characters: 0, O, I, l) for address human readable
+static const std::string base58_chars = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+
+// Function to encode data using Base58
+std::string EncodeBase58(const std::vector<unsigned char>& data) {
+    // Count leading zeros
+    size_t zeros_count = 0;
+    for (const unsigned char byte : data) {
+        if (byte != 0) {
+            break;
+        }
+        ++zeros_count;
+    }
+
+    // Convert the data to a big-endian number
+    uint64_t num = 0;
+    for (size_t i = zeros_count; i < data.size(); ++i) {
+        num = num * 256 + data[i];
+    }
+
+    // Calculate the necessary length for the encoded string
+    size_t encoded_length = (data.size() - zeros_count) * 138 / 100 + 1;
+    std::string encoded(encoded_length, '1');
+
+    // Encode the big-endian number in Base58
+    for (size_t i = 0; num > 0; ++i) {
+        const uint64_t remainder = num % 58;
+        num /= 58;
+        encoded[encoded_length - i - 1] = base58_chars[remainder];
+    }
+
+    return encoded;
 }
 
 namespace SPHINXKey {
@@ -90,7 +144,7 @@ namespace SPHINXKey {
     
     // Size of HYBRIDKEY
     constexpr size_t HYBRID_KEYPAIR_LENGTH = SPHINXHybridKey::CURVE448_PUBLIC_KEY_SIZE + SPHINXHybridKey::KYBER1024_PUBLIC_KEY_LENGTH + 2 * SPHINXHybridKey::HMAC_MAX_MD_SIZE;
-    HYBRID_KEYPAIR_LENGTH = 56 (Curve448 public key size) + 800 (Kyber1024 public key length) + 2 * 64 (HMAC_MAX_MD_SIZE) = 976;
+    // HYBRID_KEYPAIR_LENGTH = 56 (Curve448 public key size) + 800 (Kyber1024 public key length) + 2 * 64 (HMAC_MAX_MD_SIZE) = 976;
 
     // Define an alias for the merged public key as SPHINXPubKey
     using SPHINXPubKey = std::vector<unsigned char>;
@@ -116,11 +170,50 @@ namespace SPHINXKey {
 
     // Function to generate the smart contract address based on the public key and contract name
     std::string generateAddress(const SPHINXKey::SPHINXPubKey& publicKey, const std::string& contractName) {
-        // Assume the definition of SPHINXHash::SPHINX_256 function
+        // Step 1: Convert the public key to a string
         std::string pubKeyString = sphinxKeyToString(publicKey);
-        std::string hash = SPHINXHash::SPHINX_256(pubKeyString);
-        std::string contractIdentifier = contractName + "_" + hash;
-        return contractIdentifier;
+
+        // Step 2: Perform the SPHINX_256 hash on the public key (assuming it returns a std::string)
+        std::string sphinxHash = SPHINXHash::SPHINX_256(pubKeyString);
+
+        // Step 3: Perform the RIPEMD-160 hash on the SPHINX_256 hash (assuming it returns a std::string)
+        std::string ripemd160Hash = SPHINXHash::RIPEMD_160(sphinxHash);
+
+        // Step 4: Add a version byte to the RIPEMD-160 hash (optional)
+        // For Bitcoin addresses, the version byte is 0x00 (mainnet). We can change it if needed.
+        unsigned char versionByte = 0x00;
+        std::string dataWithVersion(1, versionByte);
+        dataWithVersion += ripemd160Hash;
+
+        // Step 5: Calculate the checksum (first 4 bytes of double SPHINX_256 hash)
+        std::string checksum = SPHINXHash::SPHINX_256(SPHINXHash::SPHINX_256(dataWithVersion)).substr(0, 4);
+
+        // Step 6: Concatenate the data with the checksum
+        std::string dataWithChecksum = dataWithVersion + checksum;
+
+        // Step 7: Perform Base58Check encoding
+        std::string address = EncodeBase58(reinterpret_cast<const unsigned char*>(dataWithChecksum.data()),
+                                           dataWithChecksum.size());
+
+        return address;
+    }
+
+    // Function to merge the private keys of Curve448 and Kyber1024
+    SPHINXKey::SPHINXPrivKey mergePrivateKeys(const SPHINXKey::SPHINXPrivKey& curve448PrivateKey, const SPHINXKey::SPHINXPrivKey& kyberPrivateKey) {
+        SPHINXKey::SPHINXPrivKey mergedPrivateKey;
+        mergedPrivateKey.reserve(curve448PrivateKey.size() + kyberPrivateKey.size());
+        mergedPrivateKey.insert(mergedPrivateKey.end(), curve448PrivateKey.begin(), curve448PrivateKey.end());
+        mergedPrivateKey.insert(mergedPrivateKey.end(), kyberPrivateKey.begin(), kyberPrivateKey.end());
+        return SPHINXHash::SPHINX_256(mergedPrivateKey); // Hash the merged private key
+    }
+
+    // Function to merge the public keys of Curve448 and Kyber1024
+    SPHINXKey::SPHINXPubKey mergePublicKeys(const SPHINXKey::SPHINXPubKey& curve448PublicKey, const SPHINXKey::SPHINXPubKey& kyberPublicKey) {
+        SPHINXKey::SPHINXPubKey mergedPublicKey;
+        mergedPublicKey.reserve(curve448PublicKey.size() + kyberPublicKey.size());
+        mergedPublicKey.insert(mergedPublicKey.end(), curve448PublicKey.begin(), curve448PublicKey.end());
+        mergedPublicKey.insert(mergedPublicKey.end(), kyberPublicKey.begin(), kyberPublicKey.end());
+        return SPHINXHash::SPHINX_256(mergedPublicKey); // Hash the merged public key
     }
 
     // Function to generate the hybrid key pair from "hybrid_key.cpp"
@@ -283,7 +376,7 @@ int main() {
     }
     std::cout << std::endl;
 
-    // Call the printKeyPair function to print and get the keys and contract address as strings
+    // Call the printKeyPair function to print and get the keys and address as strings
     std::pair<std::string, std::string> keys = SPHINXKey::printKeyPair("ExampleKeyPair", exchangedKeys.merged_key.sphinxPrivKey, exchangedKeys.merged_key.sphinxPubKey);
 
     // Access the keys and contract address as strings
