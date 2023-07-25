@@ -18,7 +18,7 @@ This code is alternative for [SPHINXHKey](https://github.com/SPHINX-HUB-ORG/SPHI
 
 ### Base58 Encoding:
 
-- The code defines a static constant string `base58_chars`, which contains characters used for Base58 encoding. Base58 is a binary-to-text encoding scheme commonly used for encoding in Bitcoin addresses and other cryptographic data, we needed this only to produce shorter address and for human readibility.
+- The code defines a static constant string `base58_chars`, which contains characters used for Base58 encoding. Base58 is a binary-to-text encoding scheme commonly used for encoding in Bitcoin addresses and other cryptographic data, we needed this only to produce shorter address and for human readability.
 
 - The function `EncodeBase58` takes a vector of unsigned characters `(std::vector<unsigned char>)` as input and returns the Base58 encoded string.
 
