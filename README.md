@@ -4,7 +4,7 @@
 
 This project is dedicated to the world community as an Open-source Post-quantum blockchain layer 1 project, means anyone can join and contribute based on his/ her passion and skills. SPHINX is a blockchain protocol designed to provide secure and scalable solutions in the post-quantum era.
 
-This repository contains code for the SPHINXKey project, which is a `Merged Hybrid Key and Address` module for the SPHINX blockchain framework.
+This repository contains code for the SPHINXKey project, which is a `Merged Hybrid Key pair` and `generating Address` module for the SPHINX blockchain framework.
 
 ## Components
 
@@ -14,30 +14,30 @@ This code is alternative for [SPHINXHKey](https://github.com/SPHINX-HUB-ORG/SPHI
 
 - SPHINXHybridKey: A namespace that contains the definition of the HybridKeypair structure, which represents a hybrid cryptographic key pair.
 
-- SPHINXHash: A namespace that contains the definitions of two hash functions: SPHINX_256 and RIPEMD_160. These functions take a vector of unsigned characters (std::vector<unsigned char>) as input and return a string representing the hashed value.
+- SPHINXHash: A namespace that contains the definitions of two hash functions: `SPHINX_256` and `RIPEMD_160`. These functions take a vector of unsigned characters `(std::vector<unsigned char>)` as input and return a string representing the hashed value.
 
 ### Base58 Encoding:
 
-- The code defines a static constant string base58_chars, which contains characters used for Base58 encoding. Base58 is a binary-to-text encoding scheme commonly used for encoding Bitcoin addresses and other cryptographic data.
+- The code defines a static constant string `base58_chars`, which contains characters used for Base58 encoding. Base58 is a binary-to-text encoding scheme commonly used for encoding in Bitcoin addresses and other cryptographic data and we needed this to produce shorter address and human readibility.
 
-- The function EncodeBase58 takes a vector of unsigned characters (std::vector<unsigned char>) as input and returns the Base58 encoded string.
+- The function `EncodeBase58` takes a vector of unsigned characters `(std::vector<unsigned char>)` as input and returns the Base58 encoded string.
 
 ### Key Generation and Hybrid Key Pair Handling:
-- The code provides several functions for generating and handling hybrid key pairs, which are composed of both Curve448 and Kyber1024 key pairs.
+- The code provides several functions for generating and handling hybrid key pairs, which are composed of both `Curve448` and `Kyber1024` key pairs.
 
 - The SPHINXKey namespace contains functions for generating public and private keys, merging public and private keys, converting keys to strings, and generating smart contract addresses based on public keys and contract names.
 
 ### Key Generation and Key Exchange Functions:
-- generate_hybrid_keypair: This function generates a hybrid key pair by creating Curve448 and Kyber1024 key pairs and then merging them into a single key pair.
+- `generate_hybrid_keypair`: This function generates a hybrid key pair by creating `Curve448` and `Kyber1024` key pairs and then merging them into a single key pair.
 
-- generate_and_perform_key_exchange: This function demonstrates the process of generating a hybrid key pair, performing a key exchange using X448 and Kyber1024 KEM (Key Encapsulation Mechanism), and encrypting and decrypting a message using Kyber1024 PKE (Public Key Encryption).
+- `generate_and_perform_key_exchange`: This function demonstrates the process of generating a hybrid key pair, performing a key exchange using `X448` and `Kyber1024` KEM (Key Encapsulation Mechanism), and encrypting and decrypting a message using `Kyber1024 PKE` (Public Key Encryption).
 
 ### Private and Public Key Merging Functions:
-The code contains two functions named mergePrivateKeys and mergePublicKeys, both of which take Curve448 and Kyber1024 private/public keys as input, merge them together, and then hash the merged keys using the SPHINX_256 function.
+The code contains two functions named `mergePrivateKeys` and `mergePublicKeys`, both of which take `Curve448` and `Kyber1024` private/public keys as input, merge them together, and then hash the merged keys using the `SPHINX_256` hash function.
 
 ### Printing and Address Generation Functions:
 
-- printKeyPair: This function takes a name, private key, and public key as input, prints them, and generates a contract address based on the public key and a contract name.
+- `printKeyPair`: This function takes a name, private key, and public key as input, prints them, and generates a contract address based on the public key and a contract name.
 
 ### Miscellaneous:
 - The code defines several constants related to key sizes and hybrid key structures.
