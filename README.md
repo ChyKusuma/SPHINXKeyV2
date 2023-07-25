@@ -10,72 +10,39 @@ This repository contains code for the SPHINXKey project, which is a `Merged Hybr
 
 This code is alternative for [SPHINXHKey](https://github.com/SPHINX-HUB-ORG/SPHINXKey) as further consideration.
 
-### SPHINXKey Namespace
+### Namespaces:
 
-The `SPHINXKey` namespace provides functions for generating key pairs, calculating addresses, and printing key information. It relies on functionality from other included headers such as `Hybrid_key.hpp` and `Hash.hpp`.
+- SPHINXHybridKey: A namespace that contains the definition of the HybridKeypair structure, which represents a hybrid cryptographic key pair.
 
-### Functions
+- SPHINXHash: A namespace that contains the definitions of two hash functions: SPHINX_256 and RIPEMD_160. These functions take a vector of unsigned characters (std::vector<unsigned char>) as input and return a string representing the hashed value.
 
-#### Generated hybrid key
-`generate_hybrid_keypair()`
+### Base58 Encoding:
 
-- This function generates a hybrid key pair by calling the `generate_kyber1024_key_pair()` and `generate_x448_key_pair()` functions. It returns the generated hybrid key pair.
+- The code defines a static constant string base58_chars, which contains characters used for Base58 encoding. Base58 is a binary-to-text encoding scheme commonly used for encoding Bitcoin addresses and other cryptographic data.
 
-#### Generate X488 key pair
-`generate_x448_key_pair()`
+- The function EncodeBase58 takes a vector of unsigned characters (std::vector<unsigned char>) as input and returns the Base58 encoded string.
 
-- This function generates an `X448` key pair using the `curve448_generate_keypair` function. It returns a pair of arrays representing the private and public keys.
+### Key Generation and Hybrid Key Pair Handling:
+- The code provides several functions for generating and handling hybrid key pairs, which are composed of both Curve448 and Kyber1024 key pairs.
 
-#### Generated Kyber1024 key pair
-`generate_kyber1024_key_pair()`
+- The SPHINXKey namespace contains functions for generating public and private keys, merging public and private keys, converting keys to strings, and generating smart contract addresses based on public keys and contract names.
 
-- This function generates a `Kyber1024` private key using the `kyber1024_kem::keygen` function. It returns the generated private key.
+### Key Generation and Key Exchange Functions:
+- generate_hybrid_keypair: This function generates a hybrid key pair by creating Curve448 and Kyber1024 key pairs and then merging them into a single key pair.
 
-#### Merged key pair
-`merge_key_pair(const std::pair<unsigned char[32], unsigned char[32]>& x448_key, const kyber1024_kem::PrivateKey& kyber_key)`
+- generate_and_perform_key_exchange: This function demonstrates the process of generating a hybrid key pair, performing a key exchange using X448 and Kyber1024 KEM (Key Encapsulation Mechanism), and encrypting and decrypting a message using Kyber1024 PKE (Public Key Encryption).
 
-- This function merges the `X448` and `Kyber1024` key pairs into a hybrid key pair. It takes the `X448` key pair and `Kyber1024` private key as input parameters and returns the merged hybrid key pair.
+### Private and Public Key Merging Functions:
+The code contains two functions named mergePrivateKeys and mergePublicKeys, both of which take Curve448 and Kyber1024 private/public keys as input, merge them together, and then hash the merged keys using the SPHINX_256 function.
 
-#### Perform X488 KEM
-`performX448KeyExchange(unsigned char shared_key[32], const unsigned char private_key[32], const unsigned char public_key[32])`
+### Printing and Address Generation Functions:
 
-- This function performs the `X448` key exchange to obtain a shared key. It takes the private and public keys as input parameters and stores the shared key in the `shared_key` array.
+- printKeyPair: This function takes a name, private key, and public key as input, prints them, and generates a contract address based on the public key and a contract name.
 
-#### Perform hybrid KEM
-`performHybridKeyExchange(unsigned char shared_key[32], const std::pair<unsigned char[32], unsigned char[32]>& x25519_key, const kyber1024_kem::PrivateKey& kyber_key)`
+### Miscellaneous:
+- The code defines several constants related to key sizes and hybrid key structures.
 
-- This function performs the hybrid key exchange by combining `X448` and `Kyber1024`. It calls the `performX448KeyExchange` function and then performs the `Kyber1024` KEM encapsulation using the `kyber1024_kem::encapsulate` function. It stores the shared key in the `shared_key` array.
-
-#### Generated and perform KEX
-`generate_and_perform_key_exchange()`
-
-- This function generates a hybrid key pair by calling `generate_hybrid_keypair` and then performs the hybrid key exchange using the generated key pair. It returns the hybrid key pair.
-
-#### Calculates the address for a smart contract
-`generateAddress(const std::string& publicKey, const std::string& contractName)`
-This function calculates the address for a smart contract based on a given public key and contract name. It takes the public key and contract name as input parameters and performs the following steps:
-
-- Converts the public key string to an array of 32 unsigned char bytes.
-- Calculates the SPHINX-256 hash of the public key using the `SPHINXHash::SPHINX_256` function.
-- Generates a unique identifier for the smart contract by concatenating the contract name and the hash, separated by an underscore.
-- Returns the contract identifier as the smart contract address.
-
-#### calculates the public key from a given private key
-`calculatePublicKey(const std::string& privateKey)`
-
-This function calculates the public key from a given private key. It takes the private key as input and performs the following steps:
-
-- Converts the private key string to an array of 32 unsigned char bytes.
-- Calls the `generate_hybrid_keypair` function to obtain a hybrid key pair.
-- Extracts the public key from the hybrid key pair and converts it to a string representation.
-- Calculates the SPHINX-256 hash of the public key.
-- Returns the calculated public key.
-
-#### Print Key pair
-`printKeyPair(const SPHINXHybridKey::HybridKeypair& hybridKeyPair)`
-
-This function prints the key pair information by extracting the public key from the merged key pair and calling the `SPHINXHybridKey::generateAddress` function to calculate the address. It then prints the merged public key, address, and the merged public key in the format (Kyber768-X25519).
-
+This code provides a set of functions and structures to support hybrid key generation, key exchange, encryption, decryption, and other cryptographic operations.
 
 #### The interaction and collaboration between Key.cpp and [SPHINXHybridKey](https://github.com/SPHINX-HUB-ORG/SPHINXHybridKeyV2) can be summarized as follows:
 
