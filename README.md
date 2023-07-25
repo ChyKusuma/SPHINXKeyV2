@@ -12,7 +12,7 @@ This code is alternative for [SPHINXHKey](https://github.com/SPHINX-HUB-ORG/SPHI
 
 ### Namespaces:
 
-- SPHINXHybridKey: A namespace that contains the definition of the HybridKeypair structure, which represents a hybrid cryptographic key pair.
+- SPHINXHybridKey: A namespace that contains the definition of the `HybridKeypair` structure, which represents a hybrid cryptographic key pair.
 
 - SPHINXHash: A namespace that contains the definitions of two hash functions: `SPHINX_256` and `RIPEMD_160`. These functions take a vector of unsigned characters `(std::vector<unsigned char>)` as input and return a string representing the hashed value.
 
